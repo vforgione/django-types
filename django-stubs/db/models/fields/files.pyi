@@ -1,14 +1,5 @@
-from typing import (
-    Any,
-    Callable,
-    Iterable,
-    Optional,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-    overload,
-)
+from typing import Any, Callable, Iterable, Optional, Tuple, Type, Union, overload
+from typing_extensions import Self
 
 from django.core.files.base import File
 from django.core.files.images import ImageFile
@@ -48,8 +39,6 @@ class FileDescriptor:
         self, instance: Optional[Model], cls: Type[Model] = ...
     ) -> Union[FieldFile, FileDescriptor]: ...
 
-_T = TypeVar("_T", bound="Field[Any, Any]")
-
 class FileField(Field[FileDescriptor, FileDescriptor]):
     storage: Any = ...
     upload_to: Union[str, Callable[[Any, str], str]] = ...
@@ -80,7 +69,7 @@ class FileField(Field[FileDescriptor, FileDescriptor]):
         db_tablespace: Optional[str] = ...,
         validators: Iterable[_ValidatorCallable] = ...,
         error_messages: Optional[_ErrorMessagesToOverride] = ...,
-    ) -> FileField: ...
+    ) -> Self: ...
     # class access
     @overload  # type: ignore
     def __get__(self, instance: None, owner: Any) -> FileDescriptor: ...
@@ -89,7 +78,7 @@ class FileField(Field[FileDescriptor, FileDescriptor]):
     def __get__(self, instance: Model, owner: Any) -> FieldFile: ...
     # non-Model instances
     @overload
-    def __get__(self: _T, instance: Any, owner: Any) -> _T: ...
+    def __get__(self, instance: Any, owner: Any) -> Self: ...
     def generate_filename(self, instance: Optional[Model], filename: str) -> str: ...
 
 class ImageFileDescriptor(FileDescriptor):
@@ -130,7 +119,7 @@ class ImageField(FileField):
         db_tablespace: Optional[str] = ...,
         validators: Iterable[_ValidatorCallable] = ...,
         error_messages: Optional[_ErrorMessagesToOverride] = ...,
-    ) -> ImageField: ...
+    ) -> Self: ...
     # class access
     @overload  # type: ignore
     def __get__(self, instance: None, owner: Any) -> ImageFileDescriptor: ...
@@ -139,7 +128,7 @@ class ImageField(FileField):
     def __get__(self, instance: Model, owner: Any) -> ImageFieldFile: ...
     # non-Model instances
     @overload
-    def __get__(self: _T, instance: Any, owner: Any) -> _T: ...
+    def __get__(self, instance: Any, owner: Any) -> Self: ...
     def update_dimension_fields(
         self, instance: Model, force: bool = ..., *args: Any, **kwargs: Any
     ) -> None: ...
