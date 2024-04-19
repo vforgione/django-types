@@ -34,7 +34,7 @@ class Permission(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     codename = models.CharField(max_length=100)
     def natural_key(self) -> tuple[str, str, str]: ...
-    group_set = ManyToManyRelatedManager["Group", "Permission"]
+    group_set = ManyToManyRelatedManager["Group", "Permission"]()
 
 _GroupT = TypeVar("_GroupT", bound=Group)
 
@@ -47,7 +47,7 @@ class Group(models.Model):
     name = models.CharField(max_length=150)
     permissions = models.ManyToManyField[Permission, Any](Permission)
     def natural_key(self) -> tuple[str, ...]: ...
-    user_set = ManyToManyRelatedManager["PermissionsMixin", "Group"]
+    user_set = ManyToManyRelatedManager["PermissionsMixin", "Group"]()
 
 class UserManager(BaseUserManager[_T]):
     def create_user(
